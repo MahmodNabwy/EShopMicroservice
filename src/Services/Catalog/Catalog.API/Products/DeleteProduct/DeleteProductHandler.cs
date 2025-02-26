@@ -1,11 +1,19 @@
 ﻿
 
 
+using Catalog.API.Products.UpdateProduct;
+
 namespace Catalog.API.Products.DeleteProject;
 
 public record DeleteProductCommand(Guid Id) : ICommand<DeleteProductResult>;
 public record DeleteProductResult(bool IsSuccess);
-
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+{
+    public DeleteProductCommandValidator()
+    {
+        RuleFor(command => command.Id).NotEmpty().WithMessage("Product Id Is Required");        
+    }
+}
 internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand, DeleteProductResult>
 {
     private readonly IDocumentSession _session;
@@ -24,7 +32,7 @@ internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductComman
         var product = await _session.LoadAsync<Product>(command.Id, cancellationToken);
         if (product is null)
         {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(command.Id);
         }
 
         _session.Delete(product);
