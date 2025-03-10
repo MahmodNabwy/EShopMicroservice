@@ -14,7 +14,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
     {
         RuleFor(command => command.Id).NotEmpty().WithMessage("Product Id Is Required");
         RuleFor(command => command.Name).NotEmpty().WithMessage("Name Is Required")
-                                                   .Length(2,150)
+                                                   .Length(2, 150)
                                                    .WithMessage("Name must be between 2 and 150 characters");
 
         RuleFor(command => command.Category).NotEmpty().WithMessage("Category Is Required");
@@ -26,16 +26,13 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 internal class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
     private readonly IDocumentSession _session;
-    private readonly ILogger<UpdateProductCommandHandler> _logger;
 
-    public UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger)
+    public UpdateProductCommandHandler(IDocumentSession session)
     {
         _session = session;
-        _logger = logger;
     }
     public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("UpdateProductCommandHandler.Handle called with {@command}", command);
 
         var product = await _session.LoadAsync<Product>(command.Id, cancellationToken);
 

@@ -9,12 +9,11 @@ public record GetProductByIdResult(Product Product);
 internal class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, GetProductByIdResult>
 {
     private readonly IDocumentSession _session;
-    private readonly ILogger<GetProductByIdQueryHandler> _logger;
-
-    public GetProductByIdQueryHandler(IDocumentSession session, ILogger<GetProductByIdQueryHandler> logger)
+ 
+    public GetProductByIdQueryHandler(IDocumentSession session )
     {
         _session = session;
-        _logger = logger;
+       
     }
     public async Task<GetProductByIdResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
